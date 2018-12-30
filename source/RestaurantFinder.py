@@ -7,36 +7,31 @@ APIKEY = ''
 
 class Application(tk.Frame):
     restaurantlist = []
-    labels = []
 
-    def __init__(self, passedList, master=None):
+    def __init__(self, passedlist, master=None):
         super().__init__(master)
         self.master = master
         self.quit = tk.Button()
         self.mylist = tk.Listbox()
-        self.scrollbar = tk.Scrollbar(self)
-        self.restaurantlist = passedList
-        # self.pack_propagate(0)
-        self.pack(fill=tk.BOTH, expand=1)
+        self.scrollbar = tk.Scrollbar()
+        self.restaurantlist = passedlist
         self.create_widgets()
 
     def create_widgets(self):
-        # testlabel = tk.Label(self, text='test')
-        # self.labels.append(testlabel)
-        # testlabel.pack()
-
-        # for restaurant in self.restaurantlist:
-        #     newlabel = tk.Label(self, text=restaurant)
-        #     newlabel.pack()
-        self.scrollbar.pack(side= tk.RIGHT, fill=tk.Y)
-        self.mylist = tk.Listbox(self, yscrollcommand=self.scrollbar.set)
+        self.mylist = tk.Listbox(root)
+        self.mylist.grid(row=0, column=0, sticky='nsew')
+        self.scrollbar = tk.Scrollbar(root, orient=tk.VERTICAL)
+        self.scrollbar.config(command=self.mylist.yview)
         for restaurant in self.restaurantlist:
             self.mylist.insert(tk.END, restaurant)
-        self.mylist.pack(side=tk.TOP, fill=tk.BOTH)
-        self.scrollbar.config(command=self.mylist.yview)
-        self.quit = tk.Button(self, text="QUIT", fg="red",
+        self.scrollbar.grid(row=0, column=1,  sticky='ns')
+        self.mylist.config(yscrollcommand=self.scrollbar.set)
+        self.quit = tk.Button(root, text="QUIT", fg="red",
                               command=self.master.destroy)
-        self.quit.pack(side="bottom")
+        self.quit.grid(row=1, column=0)
+        tk.Grid.columnconfigure(root, 0, weight=1)
+        tk.Grid.columnconfigure(root, 1, weight=1)
+        tk.Grid.rowconfigure(root, 0, weight=1)
 
 
 def findrestaurants(displaylist, inpagetoken=None):
@@ -60,27 +55,23 @@ def findrestaurants(displaylist, inpagetoken=None):
     return inpagetoken
 
 
-# app = QApplication(sys.argv)
-# label = QLabel("<font color=red size=40>Hello World!</font>")
-# label = QLabel("<font color=red size=40>" + str(generator.x) + "</font>")
-# label = QLabel("TEST");
-# label.show()
-# app.exec_()
-
 pagetoken = None
 
 displayList = []
 
-while True:
-    pagetoken = findrestaurants(displayList, inpagetoken=pagetoken)
-    if pagetoken:
-        print("PAGE TOKEN: " + pagetoken)
-    import time
+for i in range(20):
+    displayList.append("restaurant" + str(i))
 
-    time.sleep(5)
-
-    if not pagetoken:
-        break
+# while True:
+#     pagetoken = findrestaurants(displayList, inpagetoken=pagetoken)
+#     if pagetoken:
+#         print("PAGE TOKEN: " + pagetoken)
+#     import time
+#
+#     time.sleep(3)
+#
+#     if not pagetoken:
+#         break
 
 print("RETRIEVED THESE RESTAURANTS:")
 print(displayList)
