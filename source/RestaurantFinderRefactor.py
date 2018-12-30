@@ -89,13 +89,6 @@ def findrestaurants(displaylist, inpagetoken=None):
         reslon = result["geometry"]["location"]["lng"]
         info = ";".join(map(str, [result["name"], result["geometry"]["location"]["lat"],
                                   result["geometry"]["location"]["lng"], result.get("rating", 0), result["place_id"]]))
-        # TODO Future use - calculate distance between given location and restaurant location
-        # dlon = lon2 - lon1
-        # dlat = lat2 - lat1
-        # a = (sin(dlat / 2)) ^ 2 + cos(lat1) * cos(lat2) * (sin(dlon / 2)) ^ 2
-        # c = 2 * atan2(sqrt(a), sqrt(1 - a))
-        # d = R * c (where R is the radius of the Earth)
-        # TODO Would be better to use a Google API to retrieve distance
         disturl = f"https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins={lat},{lon}&destinations={reslat},{reslon}&key={DISTAPIKEY}"
         distresponse = requests.get(disturl)
         distres = json.loads(distresponse.text)
